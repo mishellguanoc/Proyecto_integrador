@@ -14,7 +14,7 @@ while numero <= 50:
     impresion = readkey()
     
     if impresion == 'n':
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system('cls')
         print(numero)
         numero += 1
 
