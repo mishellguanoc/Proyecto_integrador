@@ -11,20 +11,22 @@ mapa_str = '..###################\n....#.#.............#\n###.#.###.###.#.#####\
 def convertir_mapa(mapa_str):
     lineas = mapa_str.strip().split('\n')  # Dividir la cadena en líneas
     
-    global matriz
     matriz = [list(linea) for linea in lineas]  # Crear la matriz
 
     return matriz
 
+matriz = convertir_mapa(mapa_str)
 
 def limpiar_pantalla():
     os.system('cls')
+    for row in matriz:
+        print("".join(row))
 limpiar_pantalla()
 
 
 def main_loop(mapa:List[List[str]],inicio:Tuple[int,int], fin: Tuple[int,int]):
     px, py = inicio
-
+    mapa[px][py]="P"
     while (px,py)!= fin:
         limpiar_pantalla()
         tecla = readkey()
@@ -49,13 +51,11 @@ def main_loop(mapa:List[List[str]],inicio:Tuple[int,int], fin: Tuple[int,int]):
             mapa[px][py] = 'P'
 
         limpiar_pantalla()
-    print("Has llegado a tu destino")
+    print(f"Felicitaciones {jugador}!. Has llegado a tu destino")
 
 
 
-    
-matriz = convertir_mapa(mapa_str)
 inicio = (0, 0)
-fin = (len(matriz) - 1, len(matriz[0]) - 1)
+fin = (len(matriz) - 1, len(matriz[0]) - 2)
 
 main_loop(matriz, inicio, fin)
