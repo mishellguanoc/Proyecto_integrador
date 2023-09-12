@@ -6,10 +6,15 @@ from functools import reduce
 
 
 class Juego:
-    def __init__(self, mapa: str, inicio: Tuple[int, int],
-                 fin: Tuple[int, int]):
-        # Convierte el mapa en una lista de cadenas
-        self.mapa = list(mapa.split('\n'))
+    def __init__(self, mapa: str, inicio: Tuple[int, int], fin: Tuple[int, int]):
+        """
+        Constructor de la clase Juego.
+
+        :param mapa: Cadena que representa el mapa del juego.
+        :param inicio: Tupla con las coordenadas de inicio.
+        :param fin: Tupla con las coordenadas de destino.
+        """
+        self.mapa = list(map(str.strip, mapa.strip().split('\n')))
         self.inicio = inicio
         self.fin = fin
 
@@ -38,7 +43,6 @@ class Juego:
                 0 <= nueva_py < len(self.mapa[0]) and
                 self.mapa[nueva_px][nueva_py] != '#'
             ):
-                # Mover la 'P'
                 fila = list(self.mapa[px])
                 fila[py] = '.'
                 self.mapa[px] = ''.join(fila)
@@ -53,7 +57,15 @@ class Juego:
 
 class JuegoArchivo(Juego):
     def __init__(self, path_a_mapas):
+        """
+        Constructor de la clase JuegoArchivo.
+
+        :param path_a_mapas: Ruta al directorio que contiene los mapas.
+        """
         archivos_mapas = os.listdir(path_a_mapas)
+        if not archivos_mapas:
+            raise FileNotFoundError("No se encontraron archivos de mapa en el directorio 'mapas'.")
+
         nombre_archivo = random.choice(archivos_mapas)
         path_completo = os.path.join(path_a_mapas, nombre_archivo)
         mapa, inicio, fin = self.leer_mapa(path_completo)
@@ -66,7 +78,6 @@ class JuegoArchivo(Juego):
         inicio = tuple(map(int, contenido[1].strip().split()))
         fin = tuple(map(int, contenido[2].strip().split()))
 
-        # Concatenar las filas del mapa utilizando reduce
         mapa = reduce(lambda x, y: x + y, contenido[3:], '')
 
         return mapa, inicio, fin
@@ -76,5 +87,10 @@ jugador = input("Escribe tu nombre: ")
 print("Bienvenido " + jugador + " al juego")
 
 path_a_mapas = 'mapas'
-juego = JuegoArchivo(path_a_mapas)
-juego.main_loop()
+try:
+    juego = JuegoArchivo(path_a_mapas)
+    juego.main_loop()
+except FileNotFoundError:
+    print("No se encontraron archivos de mapa en el directorio 'mapas'.")
+except Exception as e:
+    print(f"Ocurrió un error inesperado: {e}")
