@@ -2,6 +2,7 @@ import os
 import random
 from readchar import readkey, key
 from typing import Tuple
+from functools import reduce
 
 
 class Juego:
@@ -60,12 +61,15 @@ class JuegoArchivo(Juego):
 
     def leer_mapa(self, archivo):
         with open(archivo, 'r') as file:
-            contenido = file.read().strip().split('\n')
+            contenido = file.readlines()
 
         inicio = tuple(map(int, contenido[1].strip().split()))
         fin = tuple(map(int, contenido[2].strip().split()))
-        mapa = contenido[3:]
-        return '\n'.join(mapa), inicio, fin
+
+        # Concatenar las filas del mapa utilizando reduce
+        mapa = reduce(lambda x, y: x + y, contenido[3:], '')
+
+        return mapa, inicio, fin
 
 
 jugador = input("Escribe tu nombre: ")
